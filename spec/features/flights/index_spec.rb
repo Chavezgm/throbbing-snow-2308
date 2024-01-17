@@ -27,16 +27,18 @@ RSpec.describe 'Flights Index Page', type: :feature do
   
     airline = Airline.create(name: 'Example Airline')
 
-    flight = Flight.create(number: 'FL123', date: '2024-01-20', airline: airline, departure_city: 'City A', arrival_city: 'City B')
+    flight1 = Flight.create(number: 'FL123', date: '2024-01-20', airline: airline, departure_city: 'City A', arrival_city: 'City B')
+    flight2 = Flight.create(number: 'DLE78', date: '2024-01-20', airline: airline, departure_city: 'City c', arrival_city: 'City D')
 
     passenger1 = Passenger.create(name: 'Passenger 1', age: 25)
     passenger2 = Passenger.create(name: 'Passenger 2', age: 30)
 
-    flight.passengers << [passenger1, passenger2]
+    flight1.passengers << [passenger1, passenger2]
+    flight2.passengers << passenger1
 
     visit flights_path
 
-    within "#flight_#{flight.id}" do
+    within "#flight_#{flight1.id}" do
       expect(page).to have_content(passenger1.name)
       expect(page).to have_content(passenger2.name)
       within "#passenger_#{passenger1.id}" do
@@ -44,7 +46,17 @@ RSpec.describe 'Flights Index Page', type: :feature do
       end 
     end
 
-    expect(page).not_to have_content(passenger1.name)
+    within "#flight_#{flight1.id}" do
+      expect(page).not_to have_content(passenger1.name)
+      expect(page).to have_content(passenger2.name)
+    end
+
+    within "#flight_#{flight2.id}" do
+      expect(page).to have_content(passenger1.name)
+    end 
+
+    within "#flight_#{flight1.id}" do
     expect(page).to have_content(passenger2.name)
+    end
   end
-end
+end 
