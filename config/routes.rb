@@ -7,10 +7,10 @@ Rails.application.routes.draw do
   resources :airlines do
     resources :flights, only: [:index, :show, :new, :create]
   end
-
+  
   resources :flights, only: [:index, :show, :new, :create] do
-    resources :passengers, only: [:index, :show, :new, :create]
+    resources :passengers, only: [:index, :show, :new, :create, :destroy],  controller: 'passenger_flights'
   end
-
+  
   resources :passengers, only: [:index, :show, :new, :create]
 end

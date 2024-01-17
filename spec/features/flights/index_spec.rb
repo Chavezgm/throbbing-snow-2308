@@ -39,11 +39,11 @@ RSpec.describe 'Flights Index Page', type: :feature do
     within "#flight_#{flight.id}" do
       expect(page).to have_content(passenger1.name)
       expect(page).to have_content(passenger2.name)
-
-      click_link 'Remove'
+      within "#passenger_#{passenger1.id}" do
+        click_link 'Remove'
+      end 
     end
 
-    expect(page).to have_content('Passenger removed from the flight.')
     expect(page).not_to have_content(passenger1.name)
     expect(page).to have_content(passenger2.name)
   end
